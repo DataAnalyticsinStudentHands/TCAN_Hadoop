@@ -1,0 +1,10 @@
+.metadata/
+.recommenders/
+**/bin/
+**/input*/
+**/output/
+MaxTemperature/
+WordCount/
+FlightsByCarrier/
+OneHourNotWorking/
+**/build/
