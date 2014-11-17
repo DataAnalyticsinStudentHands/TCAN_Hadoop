@@ -1,6 +1,9 @@
 package OneHour;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,6 +14,19 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class OneHourMap extends Mapper<LongWritable, Text, Text, Text> {
 
+	 public final static String sitesfile="sites.txt"; 
+	 public ArrayList<String> HoustonSitesList = new ArrayList<String>();
+
+	 public void setup(Context context) throws IOException { 
+	 Scanner reader = new Scanner(new FileReader(sitesfile)); 
+
+	 while (reader.hasNext())
+	 {
+		HoustonSitesList.add(reader.next());
+	 }
+		
+	 reader.close(); 
+	 } 
 
 	public void map(LongWritable key, Text value, Context context)   throws IOException, InterruptedException {
 
@@ -75,37 +91,15 @@ public class OneHourMap extends Mapper<LongWritable, Text, Text, Text> {
 
 			//let o3 value = "NA" if there is a flag information
 			if (flagStr.equals(""))
-				o3Value = valueStr;
+				if (valueStr.equals("NULL"))
+					o3Value = "NA";			
+				else o3Value = valueStr;
 			else
 				o3Value = "NA";
 
 			String minAValue = minStr + ":" + o3Value;
-
-			// filtering only houston sites 
-			String [] houstonSitesList = {"1", "8", "18", "22", "26", "35", "48", "51","53", "81", "108", "110", "139", "146", "150", "154", "169", "181", "235", 
-					"240", "404", "405", "406", "407", "409", "410", "411", "671", "673", "695", "697", "698", "699", "1001"};
-
-			ArrayList<String> HoustonSitesList = new ArrayList<String>();
-
-			HoustonSitesList.add("1");			HoustonSitesList.add("146");
-			HoustonSitesList.add("8");			HoustonSitesList.add("150");
-			HoustonSitesList.add("18");			HoustonSitesList.add("154");
-			HoustonSitesList.add("22");			HoustonSitesList.add("169");
-			HoustonSitesList.add("26");			HoustonSitesList.add("181");
-			HoustonSitesList.add("35");			HoustonSitesList.add("240");
-			HoustonSitesList.add("48");			HoustonSitesList.add("404");
-			HoustonSitesList.add("51");			HoustonSitesList.add("405");
-			HoustonSitesList.add("53");			HoustonSitesList.add("406");
-			HoustonSitesList.add("407");		HoustonSitesList.add("1001");
-			HoustonSitesList.add("698");		HoustonSitesList.add("699");
-			HoustonSitesList.add("409");		HoustonSitesList.add("410");
-			HoustonSitesList.add("411");		HoustonSitesList.add("671");
-			HoustonSitesList.add("673");		HoustonSitesList.add("695");		
-			HoustonSitesList.add("697");		HoustonSitesList.add("81");
-			HoustonSitesList.add("108");		HoustonSitesList.add("110");
-			HoustonSitesList.add("139");
-
-
+			
+			// filtering only user defined sites 
 			if(HoustonSitesList.contains(siteStr))
 			{
 				
@@ -118,5 +112,4 @@ public class OneHourMap extends Mapper<LongWritable, Text, Text, Text> {
 			e.printStackTrace();
 		}
 	}
-
 }

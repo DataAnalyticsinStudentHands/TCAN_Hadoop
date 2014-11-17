@@ -2,10 +2,10 @@ package OneHour;
 
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.TextOutputFormat;
 import org.apache.hadoop.mapreduce.Job;
@@ -18,6 +18,7 @@ public class OneHourMain
 {
 	public static void main(String[] args) throws Exception 
 	{
+		
 		Configuration conf = new Configuration();
 		args = new GenericOptionsParser(conf, args).getRemainingArgs();
 		conf.set("mapreduce.output.textoutputformat.separator", ",");
@@ -25,11 +26,12 @@ public class OneHourMain
 		//The 3rd argument (parameter id) is set as property of the configuration so 
 		//that it is possible to retrieve it in mapper
 		conf.set("param_id", args[2]);
-
+		
 		//job configuration
 		Job job = new Job(conf, "BD HW2 part2 step1 YZ");
-
-		
+		Path toCache = new Path("/gtoti/sites/sites.txt"); 
+		job.addCacheFile(toCache.toUri()); 
+		job.createSymlink(); 
 
 		//if there is a timeout for the scanner, the timeout is extended extra 3 minutes
 		//int scannerTimeout = (int) conf.getLong(
