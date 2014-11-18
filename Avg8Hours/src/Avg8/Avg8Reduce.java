@@ -40,7 +40,7 @@ public class Avg8Reduce extends Reducer<Text,Text,Text,Text> {
 		valMap[index] = split[1];
 	}
 	
-	//count missing values in array. If > 16 array is discharged
+	//count missing values in array. If > 6 (75%) array is discharged
 	for (int i = 0; i<24; i++)
 		if (Double.parseDouble(valMap[i]) > 999999999)
 			missing++;
@@ -50,7 +50,7 @@ public class Avg8Reduce extends Reducer<Text,Text,Text,Text> {
 	ArrayList<String> list = new ArrayList <String>();
 	int count = 0; // keeps track of number of elements in the list
 	
-	if (missing < 17) {
+	if (missing < 7) {
 		for (String s : valMap) {
 		
 		hourValue = 0.00;
